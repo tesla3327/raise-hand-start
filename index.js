@@ -13,17 +13,27 @@ function toggleHandRaise() {
   if (raisedHands.has('local')) {
     raisedHands.delete('local');
     button.innerText = 'Raise hand';
+    callFrame.sendAppMessage({ type: 'lower-hand' });
   } else {
     raisedHands.add('local');
     button.innerText = 'Lower hand';
+    callFrame.sendAppMessage({ type: 'raise-hand' });
   }
 
   updateParticipantInfoDisplay();
 }
 
 // This method is called whenever we receive an 'app-message' event
-function handleMessage(message) {
-  // We'll fill this in a bit later
+function handleMessage({ fromId, data }) {
+  const { type } = data;
+
+  if (type === 'raise-hand') {
+    raisedHands.add(fromId);
+    updateParticipantInfoDisplay();
+  } else if (type === 'lower-hand') {
+    raisedHands.delete(fromId);
+    updateParticipantInfoDisplay();
+  }
 }
 
 // This method is called whenever we receive a 'participant-updated' event
