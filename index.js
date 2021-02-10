@@ -5,6 +5,21 @@
 
 // This object lets us interact with the video call
 let callFrame;
+const raisedHands = new Set();
+
+function toggleHandRaise() {
+  const button = document.getElementById('toggle-hand-raise');
+
+  if (raisedHands.has('local')) {
+    raisedHands.delete('local');
+    button.innerText = 'Raise hand';
+  } else {
+    raisedHands.add('local');
+    button.innerText = 'Lower hand';
+  }
+
+  updateParticipantInfoDisplay();
+}
 
 // This method is called whenever we receive an 'app-message' event
 function handleMessage(message) {
@@ -29,8 +44,9 @@ function updateParticipantInfoDisplay(e) {
 
   for (var id in participants) {
     let p = participants[id];
+    const handRaised = raisedHands.has(id) ? '| RAISED HAND' : '';
     participantsList += `
-        <li>${p.user_name || 'Guest'}</li>
+        <li>${p.user_name || 'Guest'} ${handRaised}</li>
     `;
   }
   meetingParticipantsInfo.innerHTML = participantsList;
