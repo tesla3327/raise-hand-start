@@ -37,7 +37,11 @@ function handleMessage({ fromId, data }) {
 }
 
 // This method is called whenever we receive a 'participant-updated' event
-function handleParticipantUpdated(e) {
+function handleParticipantUpdated() {
+  if (raisedHands.has('local')) {
+    callFrame.sendAppMessage({ type: 'raise-hand' });
+  }
+
   updateParticipantInfoDisplay();
 }
 
